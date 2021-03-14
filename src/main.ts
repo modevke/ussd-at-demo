@@ -16,5 +16,5 @@ app.use(helmet())
 logex()
 routes(app);
 
-const port = process.env.PORT;
+const port = 4080;
 app.listen(port, () => console.log(`Server listening at port ${port}`));
