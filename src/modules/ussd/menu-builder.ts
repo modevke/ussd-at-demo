@@ -4,6 +4,7 @@ import { fetchThirdPartyMotor, fetchThirdPartyMotorByID } from './operations/gen
 
 export let menu = new UssdMenuBuilder()
 
+// SET UP SESSION
 let sessions = {};
 menu.sessionConfig({
     start: function (sessionId, key) {
@@ -121,6 +122,9 @@ menu.state('products_display', {
               console.log("HANDLE MULTI RESPONSE: ", selected);
 
               if( selected === "#"){
+                menu.session.set('route-sub', null)
+                menu.session.set('route-sub-id', null)
+                menu.session.set('route-id', null)
                 // HANDLE BACK FUNCTION
                 menu.go(route)
               } else {
@@ -159,6 +163,7 @@ menu.state('products_display', {
 
               if(len === 1){
                 menu.session.set('route-sub', 'singular')
+                // ASSUMTION ONLY 1 VALUE SENT
                 menu.session.set('route-sub-id', "1")
               } else {
                 menu.session.set('route-sub', 'multi')
@@ -192,6 +197,12 @@ const routeHandler = {
       label: "third_party_motor",
       fetch: fetchThirdPartyMotor,
       fetchID: fetchThirdPartyMotorByID
+    },
+    "2": {
+      product: "Comprehensive Motor",
+      label: "comprehensive_motor",
+      // fetch: fetchComprehensiveMotor,
+      // fetchID: fetchComprehensiveMotorID
     }
   }
 }

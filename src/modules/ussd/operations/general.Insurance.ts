@@ -12,18 +12,19 @@ const third_party_motor = [
     },
     {
         id: "2",
-        policy_number: "******876",
-        premium_amount: "₦6,000",
+        policy_number: "******653",
+        premium_amount: "₦5,000",
         vehicle_make: "Toyota",
-        vehicle_model: "axio",
-        vehicle_registration_number: "DEG3789",
+        vehicle_model: "hilux",
+        vehicle_registration_number: "AEG35262",
         vehicle_value: "₦3,000,000",
         policy_status: "Active",
-        expiry_date: "08/03/2022",
+        expiry_date: "06/10/2021",
     }
 ]
 export async function fetchThirdPartyMotor(phone, name){
     // TODO FETCH DATA
+    
     // TODO CACHE DATA
     
     return Promise.resolve(third_party_motor)

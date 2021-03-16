@@ -37,12 +37,12 @@ export function getMenuContent(){
                 "title": "1. Third Party Motor\n2. Comprehensive Motor\n3. Home & Householders Insurance\n4. Fire & Special Perils Insurance\n5. Burglary & Housebreaking Insurance\n6. Hersurance\n7. TravelSure\n\n0. Main Menu\n#. Previous Menu",
                 "next": {
                     "1": "products_display",
-                    "2": "comprehensive_motor",
-                    "3": "home_householders_insurance",
-                    "4": "fire_special_perils_insurance",
-                    "5": "burglary_housebreaking_insurance",
-                    "6": "hersurance",
-                    "7": "travelSure",
+                    "2": "products_display",
+                    "3": "products_display",
+                    "4": "products_display",
+                    "5": "products_display",
+                    "6": "products_display",
+                    "7": "products_display",
                     "0": "back_to_main",
                     "#": "my_portfolio"
                 }
