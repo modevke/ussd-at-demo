@@ -109,7 +109,8 @@ menu.state('products_display', {
         if(len === 1){
           console.log("go to products_display_one");
           console.log(menu);
-          menu[menu.args.phoneNumber]='products_display_one';
+       //   menu[menu.args.phoneNumber]='products_display_one';
+          menu.session.set('short-circuit',true);
           menu.go('products_display_one');
           
           
@@ -138,18 +139,22 @@ menu.state('products_display_one', {
   run: () => {
 
     menu.session.get('route').then(route =>{
-     menu.session.get('route-id').then(routeID =>{
+    menu.session.get('route-id').then(routeID =>{
+      menu.session.get('short-circuit').then(shortCircuit =>{
       const selected = menu.val;
-      console.log("selected", selected);
+      console.log("selected", selected,shortCircuit);
        menu.session.get('res').then(res =>{
-        if(selected){ //from multi screen
+        
+        if(shortCircuit){//from short circuit
+          console.log("from short circuit - only one item", selected);
+          res =res[0];
+        
+        }else{  //from multi screen
           console.log("from multi screen", selected);
           res =res[parseInt(selected)-1];
-        }else{ //from short circuit
-          console.log("from short circuit - only one item", selected);
     
         }
-    
+       
         console.log("DID IT", res);
         menu.con(menuService.getMenuFunctionTitle(
            routeHandler[route][routeID].label,
@@ -157,11 +162,11 @@ menu.state('products_display_one', {
             'products_display_one',
             "5"
           ))
-  
+        });
         });
       });
       
-
+      menu.session.set('short-circuit',false);
     });
  
 },
