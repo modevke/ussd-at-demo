@@ -1,4 +1,4 @@
-import {productDisplaySchema, productDisplayArraySchema} from './product-schemas'
+import {productDisplaySchema, productDisplayArraySchema, productNextArraySchema} from './product-schemas'
 
 export function getMenuContent(){
     return {
@@ -37,7 +37,7 @@ export function getMenuContent(){
                 "title": "1. Third Party Motor\n2. Comprehensive Motor\n3. Home & Householders Insurance\n4. Fire & Special Perils Insurance\n5. Burglary & Housebreaking Insurance\n6. Hersurance\n7. TravelSure\n\n0. Main Menu\n#. Previous Menu",
                 "next": {
                     "1": "products_display",
-                    "2": "comprehensive_motor",
+                    "2": "products_display",
                     "3": "home_householders_insurance",
                     "4": "fire_special_perils_insurance",
                     "5": "burglary_housebreaking_insurance",
@@ -66,6 +66,29 @@ export function getMenuContent(){
                     return `${display}\n\n 0. Main Menu\n #. Previous Menu`
                 }
             },
+            "products_display_many":{
+                    "title": (name, data) => {
+                            const display = productDisplayArraySchema[name](data)
+                            return `${display}\n\n 0. Main Menu\n #. Previous Menu`
+                        }
+                        ,"next":{
+                            "#": "sms_product_details",
+                            "0": "back_to_main",
+                            "*\\d+": "products_display_one",
+                        }
+                },
+                "products_display_one":{
+                    "title": (name, data) => {
+                            const display = productDisplaySchema[name](data)
+                            return `${display}\n\n 0. Main Menu\n #. Previous Menu`
+                        }
+                     ,"next":{
+                            "#": "sms_product_details",
+                            "0": "back_to_main",
+                        }
+                },
+            
         }
+        
     }
 }

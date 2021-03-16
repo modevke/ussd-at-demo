@@ -1,6 +1,6 @@
 import UssdMenuBuilder from 'ussd-menu-builder'
 import {menuPicker as menuService} from './menu-picker'
-import { fetchThirdPartyMotor, fetchThirdPartyMotorByID } from './operations/general.Insurance';
+import { fetchComprehensiveMotor, fetchComprehensiveMotorByID, fetchThirdPartyMotor, fetchThirdPartyMotorByID } from './operations/general.Insurance';
 
 export let menu = new UssdMenuBuilder()
 
@@ -55,7 +55,8 @@ menu.state('back_to_main', {
 });
 
 menu.state('entry.pin', {
-    run: () => {
+    run: () => { 
+      //TODO: validate pin 
       menu.con(menuService.getMenu('choose_service', '2'))
     },
     next: menuService.getMenuTags('choose_service', '2')
@@ -89,100 +90,106 @@ menu.state('my_general_insurance', {
   next: menuService.getMenuTags('my_general_insurance', '4')
 });
 menu.state('products_display', {
-  run: () => {
-
-    menu.session.get('route').then(route => {
-      console.log("Route is: ", route);
-
-      const selected = menu.val;
-      
-      console.log("SELECTED ACTION", selected);
-
-      // CHECK IF SUB-ROUTE LEVEL HAS BEEN REACHED
-      menu.session.get("route-sub").then(sub => {
-        console.log("Sub Route is: ", sub);
-        if(sub){
-
-          menu.session.get("route-id").then(routeID => {
-
-            if(sub === 'singular'){
-              console.log("HANDLE SINGULAR RESPONSE");
+ run:()=>{
+ 
+   menu.session.get('route').then(route =>{
+    console.log("Route is: ", route);
+    const selected = menu.val;
+    menu.session.set('route-id', selected)
+    // FETCH OPERATION
+    routeHandler[route][selected].fetch("phone", "name").then(res => {
+      menu.session.set('res', res)
+      const len = res.length
+      if(len === 0){
+        // TODO Display user has no policy
+        console.log("user has no policy");
+        
+      } else {
+  
+        if(len === 1){
+          console.log("go to products_display_one");
+          console.log(menu);
+          menu[menu.args.phoneNumber]='products_display_one';
+          menu.go('products_display_one');
           
-              menu.session.get("route-sub-id").then(subid => {
           
-                if(selected === "1"){
-                  console.log("SEND AN SMS");
-                  
-                }
-                
-              })
-              
-            } else {
-              console.log("HANDLE MULTI RESPONSE: ", selected);
-
-              if( selected === "#"){
-                // HANDLE BACK FUNCTION
-                menu.go(route)
-              } else {
-                console.log("DISPLAY DATA SCREEN", routeID);
-                
-                routeHandler[route][routeID].fetchID(selected).then(res => {
-                  console.log("DID IT", res);
-                  
-                   // SET SUB TO SINGULAR
-                    menu.session.set('route-sub', 'singular')
-                    menu.session.set('route-sub-id', selected)
-
-                    menu.con(menuService.getMenuFunction(
-                      routeHandler[route][routeID].label,
-                      res,
-                      'products_display',
-                      "5"
-                    ))
-                })
-              }
-
-            }
-
-
-          })
+         // menu.runState(menu.states.find(state =>state.name='products_display_one' ));
+        // menu.runState(menu.states['products_display_one'] );
+          
 
         } else {
-          menu.session.set('route-id', selected)
-          // FETCH OPERATION
-          routeHandler[route][selected].fetch("phone", "name").then(res => {
-            
-            const len = res.length
-            if(len === 0){
-              // TODO Display user has no policy
-            } else {
-
-              if(len === 1){
-                menu.session.set('route-sub', 'singular')
-                menu.session.set('route-sub-id', "1")
-              } else {
-                menu.session.set('route-sub', 'multi')
-              }
-
-              menu.con(menuService.getMenuFunction(
-                routeHandler[route][selected].label,
-                res,
-                'products_display',
-                "5"
-              ))
-            }
-          })
+          console.log("go to products_display_many");
+          console.log(menu);
+          menu[menu.args.phoneNumber]='products_display_many';
+          menu.go('products_display_many');
+        //  menu.runState(menu.states['products_display_many'] );
         }
-        
-      })
-      
+  
+      }
     })
+  });
+  
 
+  
+ },
+ next:  {...menuService.getMenuTags('products_display_one', '5'), ...menuService.getMenuTags('products_display_many', '5') } 
+});
+menu.state('products_display_one', {
+  run: () => {
+
+    menu.session.get('route').then(route =>{
+     menu.session.get('route-id').then(routeID =>{
+      const selected = menu.val;
+      console.log("selected", selected);
+       menu.session.get('res').then(res =>{
+        if(selected){ //from multi screen
+          console.log("from multi screen", selected);
+          res =res[parseInt(selected)-1];
+        }else{ //from short circuit
+          console.log("from short circuit - only one item", selected);
+    
+        }
+    
+        console.log("DID IT", res);
+        menu.con(menuService.getMenuFunctionTitle(
+           routeHandler[route][routeID].label,
+            res,
+            'products_display_one',
+            "5"
+          ))
+  
+        });
+      });
+      
+
+    });
+ 
+},
+next: menuService.getMenuTags('products_display_one', '5')
+});
+menu.state('products_display_many', {
+  run: () => {
+
+    menu.session.get('route').then(route =>{
+      menu.session.get('route-id').then(routeID =>{
+    const selected = menu.val;
+    menu.session.get('res').then(res =>{
+
+      console.log("DID IT", res);
+    menu.con(menuService.getMenuFunctionTitle(
+       routeHandler[route][routeID].label,
+        res,
+        'products_display_many',
+        "5"
+      ))
+
+    });
+    
+  });
+});
   },
-  // next: menuService.getMenuTags('products_display_options', '5')
-  next: {
-    "0": "back_to_main"
-  }
+  next: menuService.getMenuTags('products_display_many', '5')
+
 });
 
 const routeHandler = {
@@ -192,6 +199,12 @@ const routeHandler = {
       label: "third_party_motor",
       fetch: fetchThirdPartyMotor,
       fetchID: fetchThirdPartyMotorByID
+    },
+    "2": {
+      product: "Comprehensive Motor",
+      label: "comprehensive_motor",
+      fetch: fetchComprehensiveMotor,
+      fetchID: fetchComprehensiveMotorByID
     }
   }
 }
