@@ -52,17 +52,9 @@ export function getMenuContent(){
             "products_display": (name, data) => {
                 if(data.length === 1){
                     const display = productDisplaySchema[name](data[0])
-                    const next = {
-                        "1": "sms_product_details",
-                        "0": "back_to_main",
-                    }
                     return `${display}\n\n 1. SMS me the details\n0. Main Menu`
                 }else{
                     const display = productDisplayArraySchema[name](data)
-                    const next = {
-                        "0": "back_to_main",
-                        "#": "my_general_insurance"
-                    }
                     return `${display}\n\n 0. Main Menu\n #. Previous Menu`
                 }
             },
@@ -80,7 +72,7 @@ export function getMenuContent(){
                 "products_display_one":{
                     "title": (name, data) => {
                             const display = productDisplaySchema[name](data)
-                            return `${display}\n\n 0. Main Menu\n #. Previous Menu`
+                            return `${display}\n\n 0. SMS me the details\n #. Previous Menu`
                         }
                      ,"next":{
                             "1": "sms_product_details",
