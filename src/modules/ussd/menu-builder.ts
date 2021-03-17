@@ -1,6 +1,6 @@
 import UssdMenuBuilder from 'ussd-menu-builder'
 import {menuPicker as menuService} from './menu-picker'
-import { fetchThirdPartyMotor, fetchThirdPartyMotorByID } from './operations/general.Insurance';
+import { fetchHomeHouseholderInsurance, fetchHomeHouseholderInsuranceID, fetchThirdPartyMotor, fetchThirdPartyMotorByID } from './operations/general.Insurance';
 
 export let menu = new UssdMenuBuilder()
 
@@ -203,6 +203,12 @@ const routeHandler = {
       label: "comprehensive_motor",
       // fetch: fetchComprehensiveMotor,
       // fetchID: fetchComprehensiveMotorID
+    },
+    "3":{
+      product: "Home & Householders Insurance",
+      label: "home_householders_insurance",
+      fetch: fetchHomeHouseholderInsurance,
+      fetchID: fetchHomeHouseholderInsuranceID
     }
   }
 }
