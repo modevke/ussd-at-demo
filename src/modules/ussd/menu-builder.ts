@@ -1,4 +1,5 @@
 import UssdMenuBuilder from 'ussd-menu-builder'
+import { routeHandler } from './configs/route-handler';
 import {menuPicker as menuService} from './menu-picker'
 import { fetchComprehensiveMotor, fetchComprehensiveMotorByID, fetchThirdPartyMotor, fetchThirdPartyMotorByID } from './operations/general.Insurance';
 
@@ -74,6 +75,22 @@ menu.state('entry.pin', {
 //   },
 //   next: menuService.getMenuTags('invest', '3')
 // });
+
+
+// ***************************************
+// NEW CHANGES MY PORTFOLIO WORKFLOW
+// ***************************************
+
+
+
+// ***************************************
+// NEW CHANGES MY PORTFOLIO WORKFLOW
+// ***************************************
+
+
+
+
+
 menu.state('my_portfolio', {
   run: () => {
       menu.session.set('route', null)
@@ -89,10 +106,11 @@ menu.state('my_general_insurance', {
   },
   next: menuService.getMenuTags('my_general_insurance', '4')
 });
+
 menu.state('products_display', {
  run:()=>{
  
-   menu.session.get('route').then(route =>{
+  menu.session.get('route').then(route =>{
     console.log("Route is: ", route);
     const selected = menu.val;
 
@@ -132,8 +150,6 @@ menu.state('products_display', {
     })
   });
   
-
-  
  },
  //next:  {...menuService.getMenuTags('products_display_one', '5'), ...menuService.getMenuTags('products_display_many', '5') } 
  next: {
@@ -168,6 +184,7 @@ menu.state('products_display', {
   }
 }
 });
+
 menu.state('products_display_one', {
   run: () => {
 
@@ -208,16 +225,22 @@ menu.state('products_display_one', {
 },
 next: menuService.getMenuTags('products_display_one', '5')
 });
+
 menu.state('products_display_many', {
   run: () => {
 
     menu.session.get('route').then(route =>{
       menu.session.get('route-id').then(routeID =>{
     const selected = menu.val;
+    if( selected === "#"){
+      menu.session.set('route-id', null)
+      // HANDLE BACK FUNCTION
+      menu.go(route)
+    }
     menu.session.get('res').then(res =>{
 
       console.log("DID IT", res);
-    menu.con(menuService.getMenuFunctionTitle(
+      menu.con(menuService.getMenuFunctionTitle(
        routeHandler[route][routeID].label,
         res,
         'products_display_many',
@@ -233,19 +256,4 @@ menu.state('products_display_many', {
 
 });
 
-const routeHandler = {
-  "my_general_insurance": {
-    "1": {
-      product: "Third Party Motor",
-      label: "third_party_motor",
-      fetch: fetchThirdPartyMotor,
-      fetchID: fetchThirdPartyMotorByID
-    },
-    "2": {
-      product: "Comprehensive Motor",
-      label: "comprehensive_motor",
-      fetch: fetchComprehensiveMotor,
-      fetchID: fetchComprehensiveMotorByID
-    }
-  }
-}
+
