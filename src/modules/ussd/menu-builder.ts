@@ -108,10 +108,11 @@ menu.state('products_display', {
   
         if(len === 1){
           console.log("go to products_display_one");
-          console.log(menu);
+         // console.log(menu);
        //   menu[menu.args.phoneNumber]='products_display_one';
-          menu.session.set('short-circuit',true);
-          menu.go('products_display_one');
+          menu.session.set('short-circuit',1)
+          .then(menu.go('products_display_one'))
+         
           
           
          // menu.runState(menu.states.find(state =>state.name='products_display_one' ));
@@ -120,8 +121,8 @@ menu.state('products_display', {
 
         } else {
           console.log("go to products_display_many");
-          console.log(menu);
-          menu[menu.args.phoneNumber]='products_display_many';
+        //  console.log(menu);
+        //  menu[menu.args.phoneNumber]='products_display_many';
           menu.go('products_display_many');
         //  menu.runState(menu.states['products_display_many'] );
         }
@@ -146,7 +147,8 @@ menu.state('products_display_one', {
        menu.session.get('res').then(res =>{
         
         if(shortCircuit){//from short circuit
-          console.log("from short circuit - only one item", selected);
+          console.log("from short circuit - only one item", selected,shortCircuit);
+          menu.session.set('short-circuit',false);
           res =res[0];
         
         }else{  //from multi screen
@@ -165,8 +167,7 @@ menu.state('products_display_one', {
         });
         });
       });
-      
-      menu.session.set('short-circuit',false);
+     
     });
  
 },
