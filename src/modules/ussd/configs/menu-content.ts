@@ -66,6 +66,20 @@ export function getMenuContent(){
                     return `${display}\n\n 0. Main Menu\n #. Previous Menu`
                 }
             },
+        },
+        "6": {
+            "my_life_insurance": {
+                // TODO SUGGESTION TO FETCH ALL COVERS AT THIS POINT
+                "title": "1. Family Plan\n2. Trerm Life Cover\n3. Critical Illness Cover\n4. Personal Accident Cover\n\n0. Main Menu\n#. Previous Menu",
+                "next": {
+                    "1": "products_display",
+                    "2": "products_display",
+                    "3": "products_display",
+                    "4": "products_display",
+                    "0": "back_to_main",
+                    "#": "my_portfolio"
+                }
+            }
         }
     }
 }
