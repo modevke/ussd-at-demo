@@ -20,3 +20,12 @@ export interface HomeHouseholderAttributes{
     premium: string,
     sum_insured: string
 }
+
+export interface FamilyPlanAttributes{
+    id: string,
+    policy_number: string,
+    cover_amount: string,
+    premium_amount: string,
+    premium_frequency: string,
+    policy_status: string
+}
