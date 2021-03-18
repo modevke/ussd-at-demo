@@ -9,3 +9,23 @@ export interface ThirdPartyMotorAttributes{
     policy_status: string,
     expiry_date: string,
 }
+
+export interface HomeHouseholderAttributes{
+    id: string,
+    policy_number: string,
+    address_covered: string,
+    cover_start_date: string,
+    cover_end_date: string,
+    policy_status: string,
+    premium: string,
+    sum_insured: string
+}
+
+export interface FamilyPlanAttributes{
+    id: string,
+    policy_number: string,
+    cover_amount: string,
+    premium_amount: string,
+    premium_frequency: string,
+    policy_status: string
+}

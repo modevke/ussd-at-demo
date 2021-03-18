@@ -1,6 +1,7 @@
 import UssdMenuBuilder from 'ussd-menu-builder'
 import {menuPicker as menuService} from './menu-picker'
-import { fetchThirdPartyMotor, fetchThirdPartyMotorByID } from './operations/general.Insurance';
+import { fetchHomeHouseholderInsurance, fetchHomeHouseholderInsuranceID, fetchThirdPartyMotor, fetchThirdPartyMotorByID } from './operations/general.Insurance';
+import { fetchFamilyPlan, fetchFamilyPlanID } from './operations/life.insurance';
 
 export let menu = new UssdMenuBuilder()
 
@@ -89,6 +90,15 @@ menu.state('my_general_insurance', {
   },
   next: menuService.getMenuTags('my_general_insurance', '4')
 });
+
+menu.state('my_life_insurance', {
+  run: () => {
+    menu.session.set('route', 'my_life_insurance')
+    menu.con(menuService.getMenu('my_life_insurance', '6'))
+  },
+  next: menuService.getMenuTags('my_life_insurance', '6')
+});
+
 menu.state('products_display', {
   run: () => {
 
@@ -203,6 +213,20 @@ const routeHandler = {
       label: "comprehensive_motor",
       // fetch: fetchComprehensiveMotor,
       // fetchID: fetchComprehensiveMotorID
+    },
+    "3":{
+      product: "Home & Householders Insurance",
+      label: "home_householders_insurance",
+      fetch: fetchHomeHouseholderInsurance,
+      fetchID: fetchHomeHouseholderInsuranceID
+    }
+  },
+  "my_life_insurance":{
+    "1":{
+      product: "Family Plan",
+      label: "family_plan",
+      fetch: fetchFamilyPlan,
+      fetchID: fetchFamilyPlanID
     }
   }
 }
