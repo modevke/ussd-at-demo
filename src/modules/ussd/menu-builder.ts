@@ -95,6 +95,7 @@ menu.state('products_display', {
    menu.session.get('route').then(route =>{
     console.log("Route is: ", route);
     const selected = menu.val;
+
     menu.session.set('route-id', selected)
     // FETCH OPERATION
     routeHandler[route][selected].fetch("phone", "name").then(res => {
@@ -134,7 +135,38 @@ menu.state('products_display', {
 
   
  },
- next:  {...menuService.getMenuTags('products_display_one', '5'), ...menuService.getMenuTags('products_display_many', '5') } 
+ //next:  {...menuService.getMenuTags('products_display_one', '5'), ...menuService.getMenuTags('products_display_many', '5') } 
+ next: {
+  '*\\d+':function(){
+    return new Promise((resolve, reject) => {
+      menu.session.get('res').then( res => {
+        const selected:String = menu.val;
+        if(res.length === 1){
+          console.log("next: go to products_display_one");
+          const next = menuService.getMenuTags('products_display_one', '5')
+        //  const next = menu.states['products_display_one'].next
+          if(next[selected]){resolve(next[selected]);return;}
+          
+          resolve('products_display_one');
+        } else {
+          console.log("next: go to products_display_many");
+         
+         // const next = menu.states['products_display_many'].next
+         const next = menuService.getMenuTags('products_display_many', '5')
+          if(next[selected]){resolve(next[selected]);return;}
+          if(!isNaN(+selected) ){resolve('products_display_one');return;}
+          resolve('products_display_many');return;
+        }
+      });
+    });
+  },
+  '#':function(resolve){
+    menu.session.get('route').then( route => {
+      resolve(route);
+      return;
+    })
+  }
+}
 });
 menu.state('products_display_one', {
   run: () => {
@@ -153,7 +185,10 @@ menu.state('products_display_one', {
         
         }else{  //from multi screen
           console.log("from multi screen", selected);
-          res =res[parseInt(selected)-1];
+          if(!isNaN(+selected)){
+            res =res[parseInt(selected)-1];
+          }
+          
     
         }
        

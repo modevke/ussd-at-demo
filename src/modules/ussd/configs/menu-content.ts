@@ -72,7 +72,7 @@ export function getMenuContent(){
                             return `${display}\n\n 0. Main Menu\n #. Previous Menu`
                         }
                         ,"next":{
-                            "#": "sms_product_details",
+                           // "#": "sms_product_details",
                             "0": "back_to_main",
                             "*\\d+": "products_display_one",
                         }
@@ -83,7 +83,7 @@ export function getMenuContent(){
                             return `${display}\n\n 0. Main Menu\n #. Previous Menu`
                         }
                      ,"next":{
-                            "#": "sms_product_details",
+                            "1": "sms_product_details",
                             "0": "back_to_main",
                         }
                 },
