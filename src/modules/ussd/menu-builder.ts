@@ -47,8 +47,6 @@ menu.state('back_to_main', {
     run: () => {
       // CLEAR SESSION
       menu.session.set('route', null)
-      menu.session.set('route-sub', null)
-      menu.session.set('route-sub-id', null)
       menu.session.set('route-id', null)
       menu.con(menuService.getMenu('choose_service', '2'))
     },
@@ -75,20 +73,6 @@ menu.state('entry.pin', {
 //   },
 //   next: menuService.getMenuTags('invest', '3')
 // });
-
-
-// ***************************************
-// NEW CHANGES MY PORTFOLIO WORKFLOW
-// ***************************************
-
-
-
-// ***************************************
-// NEW CHANGES MY PORTFOLIO WORKFLOW
-// ***************************************
-
-
-
 
 
 menu.state('my_portfolio', {
