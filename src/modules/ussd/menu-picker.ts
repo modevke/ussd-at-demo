@@ -17,23 +17,15 @@ export const menuPicker = {
             console.log('Error getMenu: '+e);
         }
     },
-    getMenuFunction: (operation_name, operation_data, unique_identifier, level) => {
-        try{
-            let rawData = getMenuContent();
-            return rawData[level][unique_identifier](operation_name, operation_data)
-        }catch(e){
-            console.log('Error getMenu: '+e);
-        }
-    }
-    ,getMenuFunctionTitle: (operation_name, operation_data, unique_identifier, level) => {
+    getMenuFunctionTitle: (operation_name, operation_data, unique_identifier, level) => {
         try{
             let rawData = getMenuContent();
             return rawData[level][unique_identifier].title(operation_name, operation_data)
         }catch(e){
             console.log('Error getMenuFunctionTitle: '+e);
         }
-    }
-    ,getMenuFunctionTag: (operation_name, operation_data, unique_identifier, level) => {
+    },
+    getMenuFunctionTag: (operation_name, operation_data, unique_identifier, level) => {
         try{
             let rawData = getMenuContent();
             return rawData[level][unique_identifier].next(operation_name, operation_data)

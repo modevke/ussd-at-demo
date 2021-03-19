@@ -48,6 +48,8 @@ menu.state('back_to_main', {
       // CLEAR SESSION
       menu.session.set('route', null)
       menu.session.set('route-id', null)
+      menu.session.set('short-circuit', null)
+      menu.session.set('res', null)
       menu.con(menuService.getMenu('choose_service', '2'))
     },
     next: menuService.getMenuTags('choose_service', '2')
@@ -74,7 +76,6 @@ menu.state('entry.pin', {
 //   next: menuService.getMenuTags('invest', '3')
 // });
 
-
 menu.state('my_portfolio', {
   run: () => {
       menu.session.set('route', null)
@@ -82,6 +83,7 @@ menu.state('my_portfolio', {
   },
   next: menuService.getMenuTags('my_portfolio', '3')
 });
+
 
 menu.state('my_general_insurance', {
   run: () => {
@@ -91,43 +93,52 @@ menu.state('my_general_insurance', {
   next: menuService.getMenuTags('my_general_insurance', '4')
 });
 
+menu.state('my_life_insurance', {
+  run: () => {
+    menu.session.set('route', 'my_life_insurance')
+    menu.con(menuService.getMenu('my_life_insurance', '4'))
+  },
+  next: menuService.getMenuTags('my_life_insurance', '4')
+});
+
+menu.state('my_savings', {
+  run: () => {
+    menu.session.set('route', 'my_savings') 
+    menu.con(menuService.getMenu('my_savings', '4'))
+  },
+  next: menuService.getMenuTags('my_savings', '4')
+});
+
 menu.state('products_display', {
- run:()=>{
+ run: () => {
+
+  console.log('____________PRODUCT DISPLAY______________');
+  
  
-  menu.session.get('route').then(route =>{
+  menu.session.get('route').then(route => {
     console.log("Route is: ", route);
     const selected = menu.val;
-
     menu.session.set('route-id', selected)
+
     // FETCH OPERATION
     routeHandler[route][selected].fetch("phone", "name").then(res => {
+      
       menu.session.set('res', res)
       const len = res.length
       if(len === 0){
         // TODO Display user has no policy
         console.log("user has no policy");
+        menu.end("You do not have this policy")
         
       } else {
   
         if(len === 1){
           console.log("go to products_display_one");
-         // console.log(menu);
-       //   menu[menu.args.phoneNumber]='products_display_one';
           menu.session.set('short-circuit',1)
           .then(menu.go('products_display_one'))
-         
-          
-          
-         // menu.runState(menu.states.find(state =>state.name='products_display_one' ));
-        // menu.runState(menu.states['products_display_one'] );
-          
-
         } else {
           console.log("go to products_display_many");
-        //  console.log(menu);
-        //  menu[menu.args.phoneNumber]='products_display_many';
           menu.go('products_display_many');
-        //  menu.runState(menu.states['products_display_many'] );
         }
   
       }
@@ -171,6 +182,7 @@ menu.state('products_display', {
 
 menu.state('products_display_one', {
   run: () => {
+    console.log('____________PRODUCT DISPLAY ONE______________');
 
     menu.session.get('route').then(route =>{
     menu.session.get('route-id').then(routeID =>{
@@ -213,31 +225,36 @@ next: menuService.getMenuTags('products_display_one', '5')
 menu.state('products_display_many', {
   run: () => {
 
+    console.log('____________PRODUCT DISPLAY MULTI______________');
+
     menu.session.get('route').then(route =>{
       menu.session.get('route-id').then(routeID =>{
-    const selected = menu.val;
-    if( selected === "#"){
-      menu.session.set('route-id', null)
-      // HANDLE BACK FUNCTION
-      menu.go(route)
-    }
-    menu.session.get('res').then(res =>{
+        const selected = menu.val;
+        if( selected === "#"){
+          menu.session.set('route-id', null)
+          // HANDLE BACK FUNCTION
+          menu.go(route)
+        }
+        menu.session.get('res').then(res =>{
 
-      console.log("DID IT", res);
-      menu.con(menuService.getMenuFunctionTitle(
-       routeHandler[route][routeID].label,
-        res,
-        'products_display_many',
-        "5"
-      ))
-
+          console.log("DID IT", res);
+          menu.con(menuService.getMenuFunctionTitle(
+          routeHandler[route][routeID].label,
+            res,
+            'products_display_many',
+            "5"
+          ))
+        });
+      });
     });
-    
-  });
-});
   },
   next: menuService.getMenuTags('products_display_many', '5')
 
 });
 
-
+menu.state('sms_product_details', {
+  run: () => {
+    console.log('____________SMS______________');
+    menu.end('SMS Sent')
+  },
+});
