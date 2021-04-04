@@ -78,10 +78,103 @@ menu.state('entry.pin', {
 
 menu.state('my_portfolio', {
   run: () => {
-      menu.session.set('route', null)
-      menu.con(menuService.getMenu('my_portfolio', '3'))
+    menu.session.set('route', null);
+    
+    menu.session.get('invalid').then(inval => {
+        const menu_text = menuService.getMenu('my_portfolio', '3');
+        let invalidInput = "";
+        if(inval){
+          console.log("______________INVALID INPUT______________");
+          invalidInput = "Invalid Input.\n";
+        }
+
+        const pre_text = invalidInput + menu_text.variable;
+        const stat_text = menu_text.static;
+        const full_text = pre_text + menu_text.static;
+        // menu.session.set("firstFullText", true);
+
+        if(full_text.length > 100){
+          console.log("Too long... ", full_text.length);
+          const pre_text_arr = pre_text.split("\n");
+          const pre_text_arr_len = pre_text_arr.length;
+          console.log("Pre text arr...", pre_text_arr);
+          console.log("Pre text len...", pre_text_arr_len);
+
+          const next = "*. Next";
+          const prev = "#. Prev";
+
+          let blocks = [""]
+          let block_pos = 0;
+
+          pre_text_arr.forEach((el, i) => {
+                       
+              const block_pos_len = blocks[block_pos].length
+              const el_len = el.length + 1;
+              let postfix = "";
+              let postfix_len;
+              if(block_pos === 0){
+                postfix = "\n"+ next + stat_text 
+                postfix_len = postfix.length //allowance for new line
+  
+              }else{
+                postfix = "\n" + prev + "\n" + next + stat_text 
+                postfix_len = postfix.length  //allowance for new line
+              }
+  
+              if((block_pos_len+el_len+postfix_len) < 100){
+                blocks[block_pos] = blocks[block_pos] + "\n" + el
+                console.log("Push In", blocks[block_pos]);
+              } else {
+                blocks[block_pos] = blocks[block_pos] + "\n" + el + postfix
+                console.log("Move to next", blocks[block_pos]);
+                block_pos += 1
+                blocks[block_pos] = blocks[block_pos] || "" 
+              }
+
+              if( i === pre_text_arr_len-1 ){
+                blocks[block_pos] =  blocks[block_pos] + "\n" + prev + stat_text
+              } 
+            
+            // if( i !== pre_text_arr_len-1 ){}
+            // else{
+            //   console.log("Last Val");
+            //   blocks[block_pos] = blocks[block_pos] + prev + stat_text
+            // }
+
+          })
+
+          console.log("BLOCKS", blocks);
+          
+
+
+        } else {
+          console.log("Good enough... ", full_text.length);
+        }
+
+
+        menu.session.set('invalid', false);
+        menu.con(full_text);
+
+    })
   },
-  next: menuService.getMenuTags('my_portfolio', '3')
+  next: {
+
+    '*.+': function(){                
+        const selected = menu.val;
+        console.log("SELECTED VAL NEXT", selected);
+
+        const nextTags = menuService.getMenuTags('my_portfolio', '3')
+
+        if(nextTags.hasOwnProperty(selected)){
+          return nextTags[selected];
+        } else{
+          menu.session.set('invalid', true);
+          return "my_portfolio";
+        }
+    },
+    "0": "back_to_main"
+    
+  }
 });
 
 

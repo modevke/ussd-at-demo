@@ -4,7 +4,7 @@ export const menuPicker = {
     getMenu: (unique_identifier: string, level: string) => {
         try{
             let rawData = getMenuContent();
-            return rawData[level][unique_identifier].title
+            return rawData[level][unique_identifier].title;
         }catch(e){
             console.log('Error getMenu: '+e);
         }

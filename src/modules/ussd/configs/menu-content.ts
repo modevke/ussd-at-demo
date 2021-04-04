@@ -22,12 +22,14 @@ export function getMenuContent(){
         },
         "3": {
             "my_portfolio": {
-                "title": "1. View My General Insurance Products\n2. View My Life Insurance Products\n3. View My Savings Products\n0. Main Menu",
+                "title": {
+                    "variable": "1. My General Insurance Products\n2. My Life Insurance Products\n3. My Savings Products\n4. Third Party Motor\n5. Comprehensive Motor\n6. Home & Householders Insurance\n7. Fire & Special Perils Insurance\n8. Burglary & Housebreaking Insurance\n9. Hersurance\n10. TravelSure",
+                    "static": "\n0. Main Menu",
+                },
                 "next": {
                     "1": "my_general_insurance",
                     "2": "my_life_insurance",
-                    "3": "my_savings",
-                    "0": "back_to_main"
+                    "3": "my_savings"
                 }
             }
         },
@@ -69,27 +71,25 @@ export function getMenuContent(){
         "5": {
            
             "products_display_many":{
-                    "title": (name, data) => {
-                            const display = productDisplayArraySchema[name](data)
-                            return `${display}\n\n 0. Main Menu\n #. Previous Menu`
-                        }
-                        ,"next":{
-                           // "#": "sms_product_details",
-                            "0": "back_to_main",
-                            "1": "products_display_one",
-                            "*\\d+": "products_display_one",
-                        }
-                },
-                "products_display_one":{
-                    "title": (name, data) => {
-                            const display = productDisplaySchema[name](data)
-                            return `${display}\n\n 1. SMS me the details\n 0. Main Menu`
-                        }
-                     ,"next":{
-                            "1": "sms_product_details",
-                            "0": "back_to_main",
-                        }
-                },
+                "title": (name, data) => {
+                        const display = productDisplayArraySchema[name](data)
+                        return `${display}\n\n 0. Main Menu\n #. Previous Menu`
+                    }
+                    ,"next":{
+                        "0": "back_to_main",
+                        "*\\d+": "products_display_one",
+                    }
+            },
+            "products_display_one":{
+                "title": (name, data) => {
+                        const display = productDisplaySchema[name](data)
+                        return `${display}\n\n 1. SMS me the details\n 0. Main Menu`
+                    }
+                    ,"next":{
+                        "1": "sms_product_details",
+                        "0": "back_to_main",
+                    }
+            },
             
         }
         
